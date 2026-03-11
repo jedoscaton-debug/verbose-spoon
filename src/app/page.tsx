@@ -265,7 +265,11 @@ function HomeContent() {
                   <div className="space-y-4 py-4">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Space Name</label>
-                      <input className="w-full h-10 px-3 rounded-md border" placeholder="e.g. Marketing Team" value={newProject.name} onChange={(e) => setNewProject({ ...newProject, name: e.target.value })} />
+                      <Input placeholder="e.g. Marketing Team" value={newProject.name} onChange={(e) => setNewProject({ ...newProject, name: e.target.value })} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Description</label>
+                      <Textarea placeholder="What is this space for?" value={newProject.description} onChange={(e) => setNewProject({ ...newProject, description: e.target.value })} />
                     </div>
                   </div>
                   <DialogFooter>
@@ -379,6 +383,26 @@ function HomeContent() {
               <Button variant="outline" onClick={() => setIsEditProjectOpen(false)}>Cancel</Button>
               <Button onClick={handleUpdateProject}>Save Changes</Button>
             </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddListOpen} onOpenChange={setIsAddListOpen}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Create New List</DialogTitle></DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">List Name</label>
+              <Input placeholder="e.g. Q1 Roadmap" value={newList.name} onChange={(e) => setNewList({ ...newList, name: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Description</label>
+              <Textarea placeholder="What will this list track?" value={newList.description} onChange={(e) => setNewList({ ...newList, description: e.target.value })} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddListOpen(false)}>Cancel</Button>
+            <Button onClick={handleCreateList} disabled={!newList.name}>Create List</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

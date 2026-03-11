@@ -1,0 +1,149 @@
+
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user account.",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "invitedById": { "type": "string" }
+      },
+      "required": ["id", "email", "firstName", "lastName", "role", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["info", "invite", "task", "alert"] },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "relatedId": { "type": "string" }
+      },
+      "required": ["id", "title", "message", "type", "read", "createdAt"]
+    },
+    "Invitation": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Invitation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "inviterId": { "type": "string" },
+        "projectId": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "inviterId", "status", "createdAt"]
+    },
+    "Project": {
+      "title": "Space",
+      "type": "object",
+      "description": "Represents a team, department, or group.",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "creatorId": { "type": "string" },
+        "visibility": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "ownerId", "creatorId", "visibility", "createdAt"]
+    },
+    "List": {
+      "title": "List",
+      "type": "object",
+      "description": "A sub-container within a space that holds tasks and a specific workflow.",
+      "properties": {
+        "id": { "type": "string" },
+        "projectId": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "creatorId": { "type": "string" }
+      },
+      "required": ["id", "projectId", "name", "createdAt", "creatorId"]
+    },
+    "Task": {
+      "title": "Task",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projectId": { "type": "string" },
+        "listId": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string" },
+        "creatorId": { "type": "string" },
+        "visibility": { "type": "string" }
+      },
+      "required": ["id", "projectId", "listId", "title", "status", "creatorId", "visibility"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "lastMessage": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Message": {
+      "title": "Message",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "senderId": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": { "entityName": "User", "schema": { "$ref": "#/backend/entities/User" } }
+      },
+      {
+        "path": "/users/{userId}/notifications/{notifId}",
+        "definition": { "entityName": "Notification", "schema": { "$ref": "#/backend/entities/Notification" } }
+      },
+      {
+        "path": "/users/{userId}/projects/{projectId}",
+        "definition": { "entityName": "Project", "schema": { "$ref": "#/backend/entities/Project" } }
+      },
+      {
+        "path": "/users/{userId}/tasks/{taskId}",
+        "definition": { "entityName": "Task", "schema": { "$ref": "#/backend/entities/Task" } }
+      },
+      {
+        "path": "/invitations/{invitationId}",
+        "definition": { "entityName": "Invitation", "schema": { "$ref": "#/backend/entities/Invitation" } }
+      },
+      {
+        "path": "/chats/{chatId}",
+        "definition": { "entityName": "Chat", "schema": { "$ref": "#/backend/entities/Chat" } }
+      },
+      {
+        "path": "/chats/{chatId}/messages/{messageId}",
+        "definition": { "entityName": "Message", "schema": { "$ref": "#/backend/entities/Message" } }
+      }
+    ]
+  }
+}

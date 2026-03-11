@@ -1,0 +1,137 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Theme Tokens */
+    --bg-base: 0 0% 100%;         /* #FFFFFF */
+    --bg-card: 210 40% 98%;        /* #F9FAFB */
+    --bg-inner: 210 40% 96.1%;     /* #F1F5F9 */
+    --border-default: 214.3 31.8% 91.4%;
+    --border-inner: 214.3 31.8% 85%;
+
+    --text-primary: 222.2 84% 4.9%;
+    --text-secondary: 215.4 16.3% 46.9%;
+    --text-muted: 215.4 16.3% 46.9%;
+    --text-dim: 215.4 16.3% 56.9%;
+    --text-faint: 215.4 16.3% 66.9%;
+    --text-ghost: 215.4 16.3% 76.9%;
+    --text-divider: 210 40% 96.1%;
+
+    --status-done: 142.1 76.2% 36.3%;
+    --status-progress: 221.2 83.2% 53.3%;
+    --status-overdue: 0 84.2% 60.2%;
+    --status-hold: 38 92% 50%;
+    --status-todo: 262.1 83.3% 57.8%;
+    --accent-blue: 221.2 83.2% 53.3%;
+
+    /* ShadCN Overrides - Light */
+    --background: var(--bg-base);
+    --foreground: var(--text-primary);
+    --card: var(--bg-card);
+    --card-foreground: var(--text-primary);
+    --popover: var(--bg-card);
+    --popover-foreground: var(--text-primary);
+    --primary: var(--accent-blue);
+    --primary-foreground: 210 40% 98%;
+    --secondary: var(--bg-inner);
+    --secondary-foreground: var(--text-secondary);
+    --muted: var(--text-divider);
+    --muted-foreground: var(--text-dim);
+    --accent: var(--status-progress);
+    --accent-foreground: var(--bg-base);
+    --destructive: var(--status-overdue);
+    --destructive-foreground: 210 40% 98%;
+    --border: var(--border-default);
+    --input: var(--border-inner);
+    --ring: var(--accent-blue);
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Color Tokens based on User Request - Dark Theme */
+    --bg-base: 220 43% 6%;         /* #080C14 */
+    --bg-card: 214 28% 7%;         /* #0D1117 */
+    --bg-inner: 218 41% 7%;        /* #0A0F18 */
+    --border-default: 215 28% 17%; /* #1F2937 */
+    --border-inner: 219 32% 11%;   /* #141B27 */
+
+    --text-primary: 210 20% 98%;   /* #F9FAFB */
+    --text-secondary: 220 14% 91%; /* #E5E7EB */
+    --text-muted: 218 11% 84%;     /* #D1D5DB */
+    --text-dim: 218 11% 65%;       /* #9CA3AF */
+    --text-faint: 220 9% 46%;      /* #6B7280 */
+    --text-ghost: 215 14% 34%;     /* #4B5563 */
+    --text-divider: 217 19% 27%;   /* #374151 */
+
+    --status-done: 156 73% 67%;     /* #6EE7B7 */
+    --status-progress: 212 96% 78%; /* #93C5FD */
+    --status-overdue: 0 94% 82%;    /* #FCA5A5 */
+    --status-hold: 47 98% 77%;      /* #FDE68A */
+    --status-todo: 255 92% 76%;     /* #A78BFA */
+    --accent-blue: 224 76% 48%;     /* #1D4ED8 */
+
+    /* ShadCN Overrides - Dark */
+    --background: var(--bg-base);
+    --foreground: var(--text-primary);
+    --card: var(--bg-card);
+    --card-foreground: var(--text-primary);
+    --popover: var(--bg-card);
+    --popover-foreground: var(--text-primary);
+    --primary: var(--accent-blue);
+    --primary-foreground: 0 0% 100%;
+    --secondary: var(--bg-inner);
+    --secondary-foreground: var(--text-secondary);
+    --muted: var(--text-divider);
+    --muted-foreground: var(--text-dim);
+    --accent: var(--status-progress);
+    --accent-foreground: var(--bg-base);
+    --destructive: var(--status-overdue);
+    --destructive-foreground: 0 0% 100%;
+    --border: var(--border-default);
+    --input: var(--border-inner);
+    --ring: var(--accent-blue);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased transition-colors duration-300;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline;
+  }
+}
+
+.kanban-column {
+  @apply bg-secondary/30 rounded-lg p-4 min-h-[500px] flex flex-col gap-4 border border-border/50 transition-all duration-300;
+}
+
+.kanban-task {
+  @apply bg-card p-4 rounded-lg shadow-sm border border-border/50 hover:border-primary/50 transition-all duration-200 cursor-grab active:cursor-grabbing;
+}
+
+.animate-pop-in {
+  animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.95) translateY(5px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40 transition-colors;
+}

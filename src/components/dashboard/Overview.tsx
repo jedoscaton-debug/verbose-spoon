@@ -84,7 +84,7 @@ export function Overview({ projects, tasks, lists, onUpdateTask, onDeleteTask, w
 
   const progressItems = useMemo(() => {
     if (isSingleSpace && lists) {
-      // In single space view, show List Progress
+      // In single space view, show List Progress sorted A-Z
       return lists.map(l => {
         const lTasks = tasks.filter(t => t.listId === l.id);
         const done = lTasks.filter(t => availableStatuses.find(s => s.value === t.status)?.isDone).length;
@@ -95,7 +95,7 @@ export function Overview({ projects, tasks, lists, onUpdateTask, onDeleteTask, w
           completed: done,
           total: lTasks.length
         };
-      }).sort((a, b) => b.progress - a.progress);
+      }).sort((a, b) => a.name.localeCompare(b.name));
     } else {
       // In overall view, show Space Progress
       return projects.map(p => {
@@ -170,30 +170,33 @@ export function Overview({ projects, tasks, lists, onUpdateTask, onDeleteTask, w
                 {filteredTasks.length === 0 ? (
                   <p className="text-center text-muted-foreground text-xs py-10 italic">No tasks found.</p>
                 ) : (
-                  filteredTasks.map(task => (
-                    <div 
-                      key={task.id} 
-                      onClick={() => setEditingTask(task)}
-                      className="p-3 rounded-lg border bg-bg-inner hover:bg-muted/10 transition-all cursor-pointer group"
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <h4 className="font-bold text-xs truncate group-hover:text-primary transition-colors">{task.title}</h4>
-                          <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
-                            {projects.find(p => p.id === task.projectId)?.name || 'Unknown Space'}
-                          </p>
+                  filteredTasks.map(task => {
+                    const listName = lists?.find(l => l.id === task.listId)?.name;
+                    return (
+                      <div 
+                        key={task.id} 
+                        onClick={() => setEditingTask(task)}
+                        className="p-3 rounded-lg border bg-bg-inner hover:bg-muted/10 transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <h4 className="font-bold text-xs truncate group-hover:text-primary transition-colors">{task.title}</h4>
+                            <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
+                              {isSingleSpace && listName ? listName : (projects.find(p => p.id === task.projectId)?.name || 'Unknown Space')}
+                            </p>
+                          </div>
+                          <div 
+                            className="w-2 h-2 rounded-full shrink-0 mt-1" 
+                            style={{ backgroundColor: availableStatuses.find(s => s.value === task.status)?.color || '#ccc' }} 
+                          />
                         </div>
-                        <div 
-                          className="w-2 h-2 rounded-full shrink-0 mt-1" 
-                          style={{ backgroundColor: availableStatuses.find(s => s.value === task.status)?.color || '#ccc' }} 
-                        />
+                        <div className="flex items-center gap-2 mt-2 text-[9px] font-bold text-muted-foreground uppercase">
+                          <Clock size={10} className="text-primary" />
+                          {task.dueDate ? format(parseISO(task.dueDate), 'MMM d, yyyy') : 'No due date'}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2 mt-2 text-[9px] font-bold text-muted-foreground uppercase">
-                        <Clock size={10} className="text-primary" />
-                        {task.dueDate ? format(parseISO(task.dueDate), 'MMM d, yyyy') : 'No due date'}
-                      </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </ScrollArea>
@@ -314,30 +317,33 @@ export function Overview({ projects, tasks, lists, onUpdateTask, onDeleteTask, w
                     {needsAttention.length === 0 ? (
                       <p className="text-center text-muted-foreground text-[10px] py-10 italic">No items require immediate attention.</p>
                     ) : (
-                      needsAttention.map(task => (
-                        <div 
-                          key={task.id} 
-                          onClick={() => setEditingTask(task)}
-                          className="flex items-center justify-between p-3 rounded-lg border border-destructive/20 bg-destructive/5 hover:bg-destructive/10 transition-colors cursor-pointer group"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <h5 className="text-xs font-bold truncate group-hover:text-destructive transition-colors">{task.title}</h5>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="outline" className="text-[8px] h-4 px-1 border-destructive/30 text-destructive bg-destructive/5 uppercase font-bold tracking-tighter">
-                                {projects.find(p => p.id === task.projectId)?.name || 'Space'}
-                              </Badge>
-                              <span className="text-[9px] font-medium text-muted-foreground flex items-center gap-1">
-                                <User size={9} /> {task.assignee || 'Unassigned'}
-                              </span>
+                      needsAttention.map(task => {
+                        const listName = lists?.find(l => l.id === task.listId)?.name;
+                        return (
+                          <div 
+                            key={task.id} 
+                            onClick={() => setEditingTask(task)}
+                            className="flex items-center justify-between p-3 rounded-lg border border-destructive/20 bg-destructive/5 hover:bg-destructive/10 transition-colors cursor-pointer group"
+                          >
+                            <div className="min-w-0 flex-1">
+                              <h5 className="text-xs font-bold truncate group-hover:text-destructive transition-colors">{task.title}</h5>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Badge variant="outline" className="text-[8px] h-4 px-1 border-destructive/30 text-destructive bg-destructive/5 uppercase font-bold tracking-tighter">
+                                  {isSingleSpace && listName ? listName : (projects.find(p => p.id === task.projectId)?.name || 'Space')}
+                                </Badge>
+                                <span className="text-[9px] font-medium text-muted-foreground flex items-center gap-1">
+                                  <User size={9} /> {task.assignee || 'Unassigned'}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="text-right ml-2 shrink-0">
+                              <p className="text-[9px] font-bold text-destructive uppercase tracking-widest">
+                                {task.dueDate ? format(parseISO(task.dueDate), 'MMM d') : 'NO DATE'}
+                              </p>
                             </div>
                           </div>
-                          <div className="text-right ml-2 shrink-0">
-                            <p className="text-[9px] font-bold text-destructive uppercase tracking-widest">
-                              {task.dueDate ? format(parseISO(task.dueDate), 'MMM d') : 'NO DATE'}
-                            </p>
-                          </div>
-                        </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                 </ScrollArea>

@@ -288,6 +288,7 @@ function HomeContent() {
                   activeTab={activeTab}
                   activeListId={activeList?.id}
                   onSelectSpace={() => { setActiveProject(project); setActiveList(null); setActiveTab(project.id); }}
+                  onSelectSpaceView={() => { setActiveProject(project); setActiveList(null); setActiveTab(project.id); }}
                   onSelectList={(list: ListType) => { setActiveProject(project); setActiveList(list); setActiveTab(list.id); }}
                   onAddList={() => { setNewList({ ...newList, projectId: project.id }); setIsAddListOpen(true); }}
                   onEditSpace={() => { setEditingProject(project); setIsEditProjectOpen(true); }}
